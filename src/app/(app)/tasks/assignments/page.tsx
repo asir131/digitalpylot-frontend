@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
+export const dynamic = "force-dynamic";
 import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 import { useAuth } from "@/context/AuthContext";
 import { useTasks } from "@/lib/hooks/useTasks";
 import { TaskTable } from "@/components/tasks/TaskTable";
@@ -12,20 +13,20 @@ export default function AssignmentsPage() {
   const { user } = useAuth();
   const { tasks, toggleComplete } = useTasks();
   const [selectedTask, setSelectedTask] = useState<TaskWithMeta | null>(null);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   const assigned = useMemo(() => {
     const filtered = tasks.filter((task) => task.assigneeId === user?.id);
-    if (!query) return filtered;
+    if (!normalized) return filtered;
     return filtered.filter((task) => {
       return (
-        task.title.toLowerCase().includes(query) ||
-        (task.clientName ?? "").toLowerCase().includes(query) ||
-        task.priority.toLowerCase().includes(query)
+        task.title.toLowerCase().includes(normalized) ||
+        (task.clientName ?? "").toLowerCase().includes(normalized) ||
+        task.priority.toLowerCase().includes(normalized)
       );
     });
-  }, [tasks, user?.id, query]);
+  }, [tasks, user?.id, normalized]);
 
   return (
     <div className="space-y-6">
@@ -38,3 +39,7 @@ export default function AssignmentsPage() {
     </div>
   );
 }
+
+
+
+

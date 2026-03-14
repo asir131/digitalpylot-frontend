@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/context/ToastContext";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Search } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { navItems } from "@/lib/navigation";
 import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useSearchContext } from "@/context/SearchContext";
 
 export function Topbar() {
   const { user, logout } = useAuth();
@@ -16,33 +17,15 @@ export function Topbar() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const current = navItems.find((item) => pathname.startsWith(item.href))?.label ?? "Tasks";
-  const view = searchParams.get("view") ?? "list";
-  const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  const { query, setQuery, view, setView } = useSearchContext();
+  const [localQuery, setLocalQuery] = useState(query);
   const debouncedQuery = useDebounce(query, 300);
 
-  const setView = (nextView: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("view", nextView);
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
   useEffect(() => {
-    const currentQuery = searchParams.get("q") ?? "";
-    if (currentQuery === debouncedQuery) return;
-    const params = new URLSearchParams(searchParams.toString());
-    if (debouncedQuery) {
-      params.set("q", debouncedQuery);
-    } else {
-      params.delete("q");
-    }
-    router.push(`${pathname}?${params.toString()}`);
-  }, [debouncedQuery, pathname, router, searchParams]);
-
-  useEffect(() => {
-    setQuery(searchParams.get("q") ?? "");
-  }, [searchParams]);
+    if (debouncedQuery === localQuery) return;
+    setQuery(localQuery);
+  }, [debouncedQuery, localQuery, setQuery]);
 
   const handleLogout = async () => {
     setLoading(true);
@@ -78,8 +61,8 @@ export function Topbar() {
           <input
             className="w-full bg-transparent text-sm text-ink placeholder:text-mist focus:outline-none"
             placeholder="Search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            value={localQuery}
+            onChange={(event) => setLocalQuery(event.target.value)}
           />
         </div>
       </div>
@@ -90,7 +73,7 @@ export function Topbar() {
               key={tab}
               type="button"
               className={view === tab ? "tab-pill tab-pill-active" : "tab-pill"}
-              onClick={() => setView(tab)}
+              onClick={() => setView(tab as "list" | "kanban" | "calendar")}
             >
               {tab[0].toUpperCase() + tab.slice(1)}
             </button>

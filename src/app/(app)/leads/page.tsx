@@ -1,7 +1,8 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import { useEffect, useState, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 import { apiFetch } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -29,8 +30,8 @@ export default function LeadsPage() {
   const [editing, setEditing] = useState<Lead | null>(null);
   const [form, setForm] = useState(emptyLead);
   const [confirmId, setConfirmId] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   const loadData = async () => {
     setLoading(true);
@@ -97,14 +98,14 @@ export default function LeadsPage() {
   };
 
   const filtered = useMemo(() => {
-    if (!query) return items;
+    if (!normalized) return items;
     return items.filter((lead) => {
       return (
-        lead.title.toLowerCase().includes(query) ||
-        lead.status.toLowerCase().includes(query)
+        lead.title.toLowerCase().includes(normalized) ||
+        lead.status.toLowerCase().includes(normalized)
       );
     });
-  }, [items, query]);
+  }, [items, normalized]);
 
   return (
     <div className="space-y-6">
@@ -193,3 +194,7 @@ export default function LeadsPage() {
     </div>
   );
 }
+
+
+
+

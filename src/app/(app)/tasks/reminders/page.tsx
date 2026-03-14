@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
+export const dynamic = "force-dynamic";
 import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 import { useTasks } from "@/lib/hooks/useTasks";
 import { TaskModal } from "@/components/tasks/TaskModal";
 import type { TaskWithMeta } from "@/lib/hooks/useTasks";
@@ -9,16 +10,16 @@ import type { TaskWithMeta } from "@/lib/hooks/useTasks";
 export default function RemindersPage() {
   const { tasks } = useTasks();
   const [selectedTask, setSelectedTask] = useState<TaskWithMeta | null>(null);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   const upcoming = useMemo(() => {
     const filtered = tasks
       .filter((task) => task.dueDate)
       .sort((a, b) => new Date(a.dueDate ?? 0).getTime() - new Date(b.dueDate ?? 0).getTime());
-    if (!query) return filtered;
-    return filtered.filter((task) => task.title.toLowerCase().includes(query));
-  }, [tasks, query]);
+    if (!normalized) return filtered;
+    return filtered.filter((task) => task.title.toLowerCase().includes(normalized));
+  }, [tasks, normalized]);
 
   return (
     <div className="space-y-6">
@@ -43,3 +44,7 @@ export default function RemindersPage() {
     </div>
   );
 }
+
+
+
+

@@ -1,16 +1,17 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { LoadingState, EmptyState } from "@/components/ui/States";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 
 export default function CustomerPortalPage() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   useEffect(() => {
     apiFetch<{ items: any[] }>("/api/customers")
@@ -20,15 +21,15 @@ export default function CustomerPortalPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    if (!query) return items;
+    if (!normalized) return items;
     return items.filter((cust) => {
       return (
-        String(cust.name ?? "").toLowerCase().includes(query) ||
-        String(cust.email ?? "").toLowerCase().includes(query) ||
-        String(cust.status ?? "").toLowerCase().includes(query)
+        String(cust.name ?? "").toLowerCase().includes(normalized) ||
+        String(cust.email ?? "").toLowerCase().includes(normalized) ||
+        String(cust.status ?? "").toLowerCase().includes(normalized)
       );
     });
-  }, [items, query]);
+  }, [items, normalized]);
 
   return (
     <div className="space-y-6">
@@ -69,3 +70,7 @@ export default function CustomerPortalPage() {
     </div>
   );
 }
+
+
+
+

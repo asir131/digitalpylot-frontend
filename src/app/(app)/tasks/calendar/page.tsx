@@ -1,5 +1,6 @@
-﻿"use client";
+"use client";
 
+export const dynamic = "force-dynamic";
 import { useTasks } from "@/lib/hooks/useTasks";
 import { CalendarView } from "@/components/tasks/CalendarView";
 
@@ -16,3 +17,7 @@ export default function TasksCalendarPage() {
     </div>
   );
 }
+
+
+
+

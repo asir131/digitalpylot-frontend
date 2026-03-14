@@ -1,4 +1,7 @@
-﻿export default function HelpCenterPage() {
+"use client";
+
+export const dynamic = "force-dynamic";
+export default function HelpCenterPage() {
   return (
     <div className="space-y-6">
       <div>
@@ -24,3 +27,7 @@
     </div>
   );
 }
+
+
+
+

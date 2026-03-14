@@ -1,6 +1,7 @@
 import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
 import { Topbar } from "@/components/Topbar";
+import { Suspense } from "react";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,7 +15,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         <main className="container-padded pb-16">
-          <Topbar />
+          <Suspense fallback={<div className="h-12" />}>
+            <Topbar />
+          </Suspense>
           <div className="mt-8">{children}</div>
         </main>
       </div>

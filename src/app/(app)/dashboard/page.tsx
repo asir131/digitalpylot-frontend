@@ -1,30 +1,30 @@
-﻿"use client";
+"use client";
 
+export const dynamic = "force-dynamic";
 import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { useTasks } from "@/lib/hooks/useTasks";
 import { TaskTable } from "@/components/tasks/TaskTable";
 import { KanbanBoard } from "@/components/tasks/KanbanBoard";
 import { CalendarView } from "@/components/tasks/CalendarView";
 import { TaskModal } from "@/components/tasks/TaskModal";
 import type { TaskWithMeta } from "@/lib/hooks/useTasks";
+import { useSearchContext } from "@/context/SearchContext";
 
 export default function DashboardPage() {
-  const searchParams = useSearchParams();
-  const view = searchParams.get("view") ?? "list";
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { view, query } = useSearchContext();
+  const normalized = query.toLowerCase();
   const { tasks, toggleComplete, setStatus, stats } = useTasks();
   const [selectedTask, setSelectedTask] = useState<TaskWithMeta | null>(null);
 
   const filtered = useMemo(() => {
-    if (!query) return tasks;
+    if (!normalized) return tasks;
     return tasks.filter((task) => {
       const title = task.title.toLowerCase();
       const client = (task.clientName ?? "").toLowerCase();
       const priority = task.priority.toLowerCase();
-      return title.includes(query) || client.includes(query) || priority.includes(query);
+      return title.includes(normalized) || client.includes(normalized) || priority.includes(normalized);
     });
-  }, [query, tasks]);
+  }, [normalized, tasks]);
 
   return (
     <div className="space-y-8">
@@ -97,3 +97,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

@@ -1,16 +1,17 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { LoadingState, EmptyState } from "@/components/ui/States";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 
 export default function AuditLogsPage() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   useEffect(() => {
     apiFetch<{ items: any[] }>("/api/audit-logs")
@@ -20,15 +21,15 @@ export default function AuditLogsPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    if (!query) return items;
+    if (!normalized) return items;
     return items.filter((log) => {
       return (
-        String(log.action ?? "").toLowerCase().includes(query) ||
-        String(log.targetType ?? "").toLowerCase().includes(query) ||
-        String(log.actorId ?? "").toLowerCase().includes(query)
+        String(log.action ?? "").toLowerCase().includes(normalized) ||
+        String(log.targetType ?? "").toLowerCase().includes(normalized) ||
+        String(log.actorId ?? "").toLowerCase().includes(normalized)
       );
     });
-  }, [items, query]);
+  }, [items, normalized]);
 
   return (
     <div className="space-y-6">
@@ -69,3 +70,7 @@ export default function AuditLogsPage() {
     </div>
   );
 }
+
+
+
+

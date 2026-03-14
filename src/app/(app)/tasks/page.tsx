@@ -1,7 +1,8 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import { useEffect, useState, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 import { apiFetch } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -29,8 +30,8 @@ export default function TasksPage() {
   const [editing, setEditing] = useState<Task | null>(null);
   const [form, setForm] = useState(emptyTask);
   const [confirmId, setConfirmId] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   const loadData = async () => {
     setLoading(true);
@@ -97,15 +98,15 @@ export default function TasksPage() {
   };
 
   const filtered = useMemo(() => {
-    if (!query) return items;
+    if (!normalized) return items;
     return items.filter((task) => {
       return (
-        task.title.toLowerCase().includes(query) ||
-        task.status.toLowerCase().includes(query) ||
-        task.priority.toLowerCase().includes(query)
+        task.title.toLowerCase().includes(normalized) ||
+        task.status.toLowerCase().includes(normalized) ||
+        task.priority.toLowerCase().includes(normalized)
       );
     });
-  }, [items, query]);
+  }, [items, normalized]);
 
   return (
     <div className="space-y-6">
@@ -192,3 +193,7 @@ export default function TasksPage() {
     </div>
   );
 }
+
+
+
+

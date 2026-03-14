@@ -1,17 +1,18 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import { useEffect, useState, useMemo } from "react";
 import { apiFetch } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { LoadingState, EmptyState } from "@/components/ui/States";
 import type { Permission } from "@/lib/types";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 
 export default function PermissionsPage() {
   const [items, setItems] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   useEffect(() => {
     apiFetch<{ items: Permission[] }>("/api/permissions")
@@ -21,15 +22,15 @@ export default function PermissionsPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    if (!query) return items;
+    if (!normalized) return items;
     return items.filter((perm) => {
       return (
-        perm.key.toLowerCase().includes(query) ||
-        perm.label.toLowerCase().includes(query) ||
-        perm.module.toLowerCase().includes(query)
+        perm.key.toLowerCase().includes(normalized) ||
+        perm.label.toLowerCase().includes(normalized) ||
+        perm.module.toLowerCase().includes(normalized)
       );
     });
-  }, [items, query]);
+  }, [items, normalized]);
 
   return (
     <div className="space-y-6">
@@ -68,3 +69,7 @@ export default function PermissionsPage() {
     </div>
   );
 }
+
+
+
+

@@ -1,7 +1,8 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchContext } from "@/context/SearchContext";
 import { apiFetch } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -45,8 +46,8 @@ export default function UsersPage() {
   const [editing, setEditing] = useState<User | null>(null);
   const [form, setForm] = useState<UserFormState>(emptyForm);
   const [confirmId, setConfirmId] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const query = (searchParams.get("q") ?? "").toLowerCase();
+  const { query } = useSearchContext();
+  const normalized = query.toLowerCase();
 
   const loadData = async () => {
     setLoading(true);
@@ -152,15 +153,15 @@ export default function UsersPage() {
   );
 
   const filteredUsers = useMemo(() => {
-    if (!query) return users;
+    if (!normalized) return users;
     return users.filter((user) => {
       return (
-        user.name.toLowerCase().includes(query) ||
-        user.email.toLowerCase().includes(query) ||
-        user.status.toLowerCase().includes(query)
+        user.name.toLowerCase().includes(normalized) ||
+        user.email.toLowerCase().includes(normalized) ||
+        user.status.toLowerCase().includes(normalized)
       );
     });
-  }, [query, users]);
+  }, [normalized, users]);
 
   return (
     <div className="space-y-6">
@@ -302,3 +303,7 @@ export default function UsersPage() {
     </div>
   );
 }
+
+
+
+
