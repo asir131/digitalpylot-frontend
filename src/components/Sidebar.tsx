@@ -24,7 +24,7 @@ export function Sidebar() {
   const other = items.filter((item) => ["Settings"].includes(item.label));
 
   return (
-    <aside className="hidden h-screen w-80 p-6 md:flex">
+    <aside className="hidden h-screen w-82 p-6 md:flex">
       <div className="sidebar-shell flex h-full flex-col">
         <div className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-citrus text-white font-bold">
@@ -62,23 +62,24 @@ export function Sidebar() {
                 </Link>
               );
             })}
-            {permissions.includes("reports.view") && pathname.startsWith("/reports") && (
-              <div className="ml-7 space-y-1">
-                {[
-                  { label: "Assignments", href: "/tasks/assignments" },
-                  { label: "Calendar", href: "/tasks/calendar" },
-                  { label: "Reminders", href: "/tasks/reminders" },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="nav-subitem"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            )}
+            {permissions.includes("reports.view") &&
+              pathname.startsWith("/reports") && (
+                <div className="ml-7 space-y-1">
+                  {[
+                    { label: "Assignments", href: "/tasks/assignments" },
+                    { label: "Calendar", href: "/tasks/calendar" },
+                    { label: "Reminders", href: "/tasks/reminders" },
+                  ].map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="nav-subitem"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
           </div>
 
           {users.length > 0 && (
