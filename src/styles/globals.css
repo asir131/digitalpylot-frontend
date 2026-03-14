@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #fff9f5;
+  color: #1f1f1f;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3e9dd;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d7c9bb;
+  border-radius: 999px;
+}
+
+.container-padded {
+  @apply px-6 md:px-10;
+}
+
+.card {
+  @apply rounded-3xl shadow-card bg-white border border-steel;
+}
+
+.text-muted {
+  @apply text-mist;
+}
+
+.input-base {
+  @apply w-full rounded-xl border border-steel bg-white px-4 py-3 text-sm text-ink placeholder:text-mist focus:border-citrus focus:outline-none focus:ring-2 focus:ring-citrus/30;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition;
+}
+
+.btn-primary {
+  @apply btn bg-citrus text-white border border-citrus shadow-glow hover:bg-white hover:text-citrus;
+}
+
+.btn-secondary {
+  @apply btn bg-white text-ink hover:bg-latte border border-steel;
+}
+
+.btn-ghost {
+  @apply btn bg-transparent text-ink hover:bg-cream border border-steel;
+}
+
+.badge {
+  @apply inline-flex items-center gap-2 rounded-full bg-cream px-3 py-1 text-xs text-mist;
+}
+
+.table-wrap {
+  @apply w-full overflow-x-auto rounded-2xl border border-steel bg-white;
+}
+
+.table {
+  @apply w-full text-left text-sm;
+}
+
+.table th {
+  @apply px-4 py-3 text-xs uppercase tracking-wide text-mist;
+}
+
+.table td {
+  @apply px-4 py-3 border-t border-steel;
+}
+
+.page-gradient {
+  background-image: radial-gradient(circle at 10% 0%, rgba(255, 201, 162, 0.45), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(255, 170, 120, 0.35), transparent 55%),
+    radial-gradient(circle at 60% 100%, rgba(255, 215, 190, 0.4), transparent 60%);
+}
+
+.grid-bg {
+  background-image: none;
+}
+
+.panel {
+  @apply rounded-3xl border border-steel bg-white shadow-card;
+}
+
+.soft-pill {
+  @apply inline-flex items-center rounded-full border border-steel bg-cream px-4 py-2 text-xs text-mist;
+}
+
+.image-placeholder {
+  @apply flex h-full w-full items-center justify-center rounded-3xl border border-steel bg-gradient-to-br from-[#FF9B63] via-[#FFC281] to-[#FFD7A6] text-sm font-semibold text-white shadow-card;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.8s ease-out both;
+}
+
+.sidebar-shell {
+  @apply rounded-[28px] border border-steel bg-[#FCE9DC] p-5 shadow-card;
+}
+
+.sidebar-card {
+  @apply flex items-center gap-3 rounded-2xl border border-steel bg-white px-3 py-2;
+}
+
+.sidebar-pill {
+  @apply inline-flex items-center rounded-full border border-steel bg-white px-3 py-1 text-xs text-mist;
+}
+
+.nav-item {
+  @apply flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-cocoa transition;
+}
+
+.nav-item-active {
+  @apply bg-[#d6d8d470] shadow-card;
+}
+
+.nav-subitem {
+  @apply flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-mist hover:bg-white/70;
+}
+
+.tab-pill {
+  @apply inline-flex items-center rounded-full border border-steel bg-white px-3 py-1 text-xs text-mist;
+}
+
+.tab-pill-active {
+  @apply border-citrus text-citrus;
+}
